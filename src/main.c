@@ -50,6 +50,8 @@ uint8_t Adresa = 0, Data = 0, AdresaR = 0;
 **
 **===========================================================================
 */
+
+int test_mainloop_num=0;
 int main(void)
 {
 // uintXX_t
@@ -94,6 +96,7 @@ int main(void)
 	// Infinite loop
 	while(1)
 	{
+		test_mainloop_num++;
 	//	Delay(0x3FF);
 	//	LCD_Clear(i);
 	//	i++;

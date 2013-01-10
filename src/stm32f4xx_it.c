@@ -39,6 +39,8 @@ extern __IO uint16_t RAM_Buffer[BuffSize];
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
 
+int test_it_dcmi_num=0;
+int test_it_dma_num=0;
 
 /******************************************************************************/
 /*            Cortex-M4 Processor Exceptions Handlers                         */
@@ -166,6 +168,8 @@ void SysTick_Handler(void)
   */
 void  DMA_Camera_STREAM_IRQHANDLER(void)
 {
+	test_it_dma_num++;
+	
 	uint16_t i;
 	// Test on DMA Stream Transfer Complete interrupt
 	if(DMA_GetITStatus(DMA_CameraToRAM_Stream, DMA_Camera_IT_TCIF))
@@ -181,6 +185,8 @@ void  DMA_Camera_STREAM_IRQHANDLER(void)
 
 void DCMI_IRQHandler(void)
 {
+	test_it_dcmi_num++;
+	
 	uint16_t i;
 
 	if(DCMI_GetITStatus(DCMI_IT_FRAME))
