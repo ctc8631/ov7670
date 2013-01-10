@@ -17,7 +17,7 @@
 #include "stm32f4xx.h"
 #include "stm32f4xx_conf.h"
 #include "OV7670.h"
-#include "SSD1289.h"
+// #include "SSD1289.h"
 
 // Co treba urobit
 /*
@@ -72,10 +72,10 @@ int main(void)
 	Stat = Camera_Init();
 	
 	// Initialize of LCD Module with SSD1286 controller	
-	LCD_Init_SSD1289();	
+	// LCD_Init_SSD1289();	
 
 	// Clear LCD Module with White background
-	LCD_Clear(0x9999);
+	// LCD_Clear(0x9999);
 	
 	NVIC_InitStructure.NVIC_IRQChannel = DCMI_IRQn;
 	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;

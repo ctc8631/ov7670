@@ -31,8 +31,6 @@ $(EXECUTABLE): \
 	src/main.c \
 	src/OV7670.c \
 	src/stm32f4xx_it.c \
-	src/SSD1289.c \
-	src/AsciiLib.c \
 	src/OV7670config.c \
 	inc/system_stm32f4xx.c \
 	inc/startup_stm32f4xx.S \

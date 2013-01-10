@@ -28,7 +28,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f4xx_it.h"
 #include "OV7670.h"
-#include "SSD1289.h"
+// #include "SSD1289.h"
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
@@ -170,9 +170,9 @@ void  DMA_Camera_STREAM_IRQHANDLER(void)
 	// Test on DMA Stream Transfer Complete interrupt
 	if(DMA_GetITStatus(DMA_CameraToRAM_Stream, DMA_Camera_IT_TCIF))
 	{
-		LCD_REG = 0x0022;
-		for(i = 0; i < BuffSize; i++)
-			LCD_RAM = RAM_Buffer[i];
+		// LCD_REG = 0x0022;
+		// for(i = 0; i < BuffSize; i++)
+			// LCD_RAM = RAM_Buffer[i];
 
 		// Clear DMA Stream Transfer Complete interrupt pending bit
 		DMA_ClearITPendingBit(DMA_CameraToRAM_Stream, DMA_Camera_IT_TCIF);
@@ -185,11 +185,11 @@ void DCMI_IRQHandler(void)
 
 	if(DCMI_GetITStatus(DCMI_IT_FRAME))
 	{
-		LCD_REG = 0x0022;
-		for(i = 0; i < BuffSize; i++)
-			LCD_RAM = RAM_Buffer[i];
-		for(i = 0; i < 28800; i++)
-			LCD_RAM = 0x0000;
+		// LCD_REG = 0x0022;
+		// for(i = 0; i < BuffSize; i++)
+			// LCD_RAM = RAM_Buffer[i];
+		// for(i = 0; i < 28800; i++)
+			// LCD_RAM = 0x0000;
 
 	 	DCMI_ClearITPendingBit(DCMI_IT_FRAME);
 	}
