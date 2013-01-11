@@ -39,8 +39,10 @@ extern __IO uint16_t RAM_Buffer[BuffSize];
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
 
-int test_it_dcmi_num=0;
-int test_it_dma_num=0;
+int num_dcmi=0;
+int num_dcmi_frame=0;
+int num_dcmi_vsync=0;
+int num_dcmi_line=0;
 
 /******************************************************************************/
 /*            Cortex-M4 Processor Exceptions Handlers                         */
@@ -168,8 +170,6 @@ void SysTick_Handler(void)
   */
 void  DMA_Camera_STREAM_IRQHANDLER(void)
 {
-	test_it_dma_num++;
-	
 	uint16_t i;
 	// Test on DMA Stream Transfer Complete interrupt
 	if(DMA_GetITStatus(DMA_CameraToRAM_Stream, DMA_Camera_IT_TCIF))
@@ -185,7 +185,7 @@ void  DMA_Camera_STREAM_IRQHANDLER(void)
 
 void DCMI_IRQHandler(void)
 {
-	test_it_dcmi_num++;
+	num_dcmi++;
 	
 	uint16_t i;
 
@@ -197,6 +197,20 @@ void DCMI_IRQHandler(void)
 		// for(i = 0; i < 28800; i++)
 			// LCD_RAM = 0x0000;
 
+		// DCMI_Cmd(DISABLE);
+		// DCMI_CaptureCmd(DISABLE); 
+		// DMA_Cmd(DMA_CameraToRAM_Stream, DISABLE);
+		num_dcmi_frame++;
 	 	DCMI_ClearITPendingBit(DCMI_IT_FRAME);
 	}
+	else if(DCMI_GetFlagStatus(DCMI_FLAG_VSYNCRI) == SET)
+    {
+		num_dcmi_vsync++;
+		DCMI_ClearFlag(DCMI_FLAG_VSYNCRI);
+    }
+	else if(DCMI_GetFlagStatus(DCMI_IT_LINE) == SET)
+    {
+		num_dcmi_line++;
+		DCMI_ClearFlag(DCMI_IT_LINE);
+    }	
 }

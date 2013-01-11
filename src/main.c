@@ -50,8 +50,7 @@ uint8_t Adresa = 0, Data = 0, AdresaR = 0;
 **
 **===========================================================================
 */
-
-int test_mainloop_num=0;
+int num_mainloop=0;
 int main(void)
 {
 // uintXX_t
@@ -72,7 +71,6 @@ int main(void)
 
 	// Initialize Camera Module OV7670 (DCMI, DMA)
 	Stat = Camera_Init();
-	
 	// Initialize of LCD Module with SSD1286 controller	
 	// LCD_Init_SSD1289();	
 
@@ -86,6 +84,8 @@ int main(void)
 	NVIC_Init(&NVIC_InitStructure);
 
 	DCMI_ITConfig(DCMI_IT_FRAME, ENABLE);
+	DCMI_ITConfig(DCMI_IT_VSYNC, ENABLE);
+	DCMI_ITConfig(DCMI_IT_LINE, ENABLE);
 	// Enable DCMI Capture mode
  	DCMI_Cmd(ENABLE);
 	DCMI_CaptureCmd(ENABLE); 
@@ -96,7 +96,7 @@ int main(void)
 	// Infinite loop
 	while(1)
 	{
-		test_mainloop_num++;
+		num_mainloop++;
 	//	Delay(0x3FF);
 	//	LCD_Clear(i);
 	//	i++;

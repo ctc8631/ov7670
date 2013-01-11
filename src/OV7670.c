@@ -20,7 +20,8 @@
 /* Private macro -------------------------------------------------- -----------*/
 /* Private variables -------------------------------------------------- -------*/
 uint8_t hodnota[4];
-__IO uint16_t RAM_Buffer[BuffSize];
+// __IO uint16_t RAM_Buffer[BuffSize];
+__IO uint16_t RAM_Buffer[picture_x*picture_y];
 
 const uint8_t Camera_REG[CHANGE_REG][2]=
 {  
@@ -193,12 +194,15 @@ const uint8_t Camera_REG[CHANGE_REG][2]=
 	{0x3b, 0x42},	
 };
 
-const uint8_t InitBuffer2[4][2]=
+const uint8_t InitBuffer2[Debug_Register_Num][2]=
 {
-	{0x11, 0xc0},
-	{0x12, 0x02},
-	{0x70, 0xba},
-	{0x71, 0x35},
+	{0x11, 0xc0}, //1100 0000
+	{0x12, 0x0c}, //0000 1100
+	{0x70, 0x3a}, //0011 1010
+	{0x71, 0x35}, //0011 0101
+	{0x8c, 0x00}, //0000 0000
+	{0x40, 0xd0}, //1101 0000
+	{0x0c, 0x4c}, //0100 1100
 };
 
 /* Private function prototypes -----------------------------------------------*/
@@ -234,7 +238,7 @@ ErrorStatus Camera_Init(void)
 // Choose between normal and debug camera operation
 #ifdef Camera_Debug
 	// for debug operation
-	for(i = 0; i < 4; i++)
+	for(i = 0; i < Debug_Register_Num; i++)
 	{
 		Camera_WriteReg(InitBuffer2[i][0], InitBuffer2[i][1]);
 	}
@@ -251,7 +255,7 @@ ErrorStatus Camera_Init(void)
 	// Choose between normal and debug camera operation
 	// for debug operation
 	#ifdef Camera_Debug
-		for(i = 0; i < 4; i++)
+		for(i = 0; i < 7; i++)
 		{
 			RetState = Camera_ReadReg(InitBuffer2[i][0]);
 			if(RetState->Data == InitBuffer2[i][1] && RetState->State == SUCCESS)
@@ -507,7 +511,7 @@ static void Camera_HW_Init(void)
 	DCMI_DeInit();
 
 	// DCMI configuration
-	DCMI_InitStructure.DCMI_CaptureMode = DCMI_CaptureMode_Continuous;
+	DCMI_InitStructure.DCMI_CaptureMode = DCMI_CaptureMode_SnapShot;
 	DCMI_InitStructure.DCMI_SynchroMode = DCMI_SynchroMode_Hardware;
 	DCMI_InitStructure.DCMI_PCKPolarity = DCMI_PCKPolarity_Rising;
 	DCMI_InitStructure.DCMI_VSPolarity = DCMI_VSPolarity_High;		
@@ -537,16 +541,19 @@ static void Camera_HW_Init(void)
 	DMA_InitStructure.DMA_Channel = DMA_Camera_Channel;
 	DMA_InitStructure.DMA_PeripheralBaseAddr = DCMI_DR_ADDRESS;
 //	DMA_InitStructure.DMA_Memory0BaseAddr = (uint32_t)&RAM_Buffer;
-	DMA_InitStructure.DMA_Memory0BaseAddr = 0x60020000;
+	// DMA_InitStructure.DMA_Memory0BaseAddr = 0x60020000;
+	DMA_InitStructure.DMA_Memory0BaseAddr = (uint32_t)RAM_Buffer;
 
 	DMA_InitStructure.DMA_DIR = DMA_DIR_PeripheralToMemory;
 //	DMA_InitStructure.DMA_BufferSize = BuffSize;
-	DMA_InitStructure.DMA_BufferSize = 1;
+	// DMA_InitStructure.DMA_BufferSize = 1;
+	DMA_InitStructure.DMA_BufferSize = picture_x*picture_y*2/4;
 
 	DMA_InitStructure.DMA_PeripheralInc = DMA_PeripheralInc_Disable;
 //	DMA_InitStructure.DMA_MemoryInc = DMA_MemoryInc_Enable;
-	DMA_InitStructure.DMA_MemoryInc = DMA_MemoryInc_Disable;
-
+	// DMA_InitStructure.DMA_MemoryInc = DMA_MemoryInc_Disable;
+	DMA_InitStructure.DMA_MemoryInc = DMA_MemoryInc_Enable;
+	
 	DMA_InitStructure.DMA_PeripheralDataSize = DMA_PeripheralDataSize_Word;
 	DMA_InitStructure.DMA_MemoryDataSize = DMA_MemoryDataSize_HalfWord;
 	DMA_InitStructure.DMA_Mode = DMA_Mode_Circular;

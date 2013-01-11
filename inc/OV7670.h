@@ -53,7 +53,11 @@ typedef enum
 // data stored in InitBuffer
 #define Camera_Verify		ENABLE
 // Choose between normal and debug camera operation
-//#define	Camera_Debug		ENABLE
+#define	Camera_Debug		ENABLE
+#define Debug_Register_Num 7
+
+#define picture_x 176 
+#define picture_y 144 
 
 /* Exported macro -------------------------------------------------- -----------*/
 
